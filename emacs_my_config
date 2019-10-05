@@ -1,0 +1,434 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(dired-listing-switches "-alhsF")
+ '(f90-auto-keyword-case (quote capitalize-word))
+ '(ido-mode (quote both) nil (ido))
+ '(inhibit-startup-screen t)
+ '(ivy-mode t)
+ '(org-agenda-files (quote ("~/Desktop1/PhD_Reports/trv.org")))
+ '(org-directory "~/Desktop1/PhD_Reports")
+ '(package-selected-packages
+   (quote
+    (org org-clock-today org-dashboard org-alert org-bullets svg-clock binclock call-graph calfw-org org-timeline idle-org-agenda yasnippet-classic-snippets helm-c-yasnippet gh-md w3m dedicated chronos realgud f90-interface-browser init-open-recentf indent-guide tramp-theme tramp-term tramp cython-mode cuda-mode helm-eww org-pdfview yasnippet-snippets switch-buffer-functions swiper-helm sml-modeline px peep-dired pdf-view-restore magit magic-latex-buffer lusty-explorer latex-math-preview latex-extra jupyter ivy-yasnippet ivy-rich ivy-pages ivy-hydra ivy-explorer ivy-bibtex highlight-parentheses helm-bind-key god-mode flyspell-popup flyspell-correct-ivy flymd evil-smartparens evil-search-highlight-persist evil-avy evil-anzu ein-mumamo counsel cl-generic cdlatex autopair all-ext ace-isearch ac-helm)))
+ '(pdf-cache-image-limit 256)
+ '(pdf-view-resize-factor 1.08)
+ '(pdf-view-use-imagemagick t)
+ '(pdf-view-use-scaling t)
+ '(preview-default-option-list
+   (quote
+    ("displaymath" "floats" "graphics" "textmath" "sections" "footnotes" "showlabels")))
+ '(preview-scale-function 1.2))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(preview-face ((t (:background "beige")))))
+
+
+;(split-window-horizontally)
+(split-window-horizontally)
+(split-window-vertically)
+
+(split-window-vertically)
+(calendar)
+(org-calendar-goto-agenda)
+(split-window-vertically)
+(diary)
+(switch-to-buffer "diary")
+
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (kill-buffer "*scratch*")
+    ;;(kill-buffer "GNU Emacs*")
+    (ansi-term "/bin/bash")
+    (switch-to-buffer "*ansi-term*")
+    (switch-to-buffer "*ansi-term*")
+    ))
+
+
+(global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+;;(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(global-set-key (kbd "C-x C-f") #'counsel-find-file)
+
+;; load emacs 24's package system. Add MELPA repository.
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (add-to-list
+   'package-archives
+   ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
+   '("melpa" . "http://melpa.milkbox.net/packages/")
+   t))
+
+
+; Default autocomplete mode
+; (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+;(add-to-list 'default-frame-alist '(alpha . (95 . 95)))
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+
+(package-initialize)  ;load and activate packages, including auto-complete
+
+(ac-config-default)
+;; Add ac-source-dictionary to ac-sources of all buffer
+(defun ac-common-setup ()
+  (setq ac-sources (append ac-sources '( ac-source-files-in-current-dir))))
+
+(global-auto-complete-mode 1)
+
+; To add .cuf files to f90 mode fortran cuda
+(add-to-list 'auto-mode-alist '("\\.cuf\\'" . f90-mode))
+
+
+
+;;(global-set-key (kbd "C-x C-f") #'helm-find-files)
+
+
+
+; From Auctex website
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+;(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+
+
+
+
+;(require 'ac-helm) ;; Not necessary if using ELPA package
+(global-set-key (kbd "C-:") 'ac-complete-with-helm)
+(define-key ac-complete-mode-map (kbd "C-:") 'ac-complete-with-helm)
+;;(require 'auto-complete-auctex)
+
+
+
+
+(require 'god-mode)
+(global-set-key (kbd "<escape>") 'god-mode-all)
+
+(setq dired-listing-switches "-alh")
+
+(yas-global-mode t)
+
+
+(global-set-key (kbd "M-o") 'ace-window)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex) ; turn on CDLaTeX automatically
+
+
+(winner-mode)
+(global-set-key [f7] 'winner-undo)
+(global-set-key [C-f7] 'winner-redo)
+
+
+
+(require 'magic-latex-buffer)
+(add-hook 'latex-mode-hook 'magic-latex-buffer)
+
+
+;; ivy mode
+(setq ivy-use-virtual-buffers t)
+(setq ivy-count-format "(%d/%d) ")
+
+(global-set-key (kbd "C-S-s") 'swiper)
+(global-set-key (kbd "C-S-x") 'counsel-M-x)
+;;(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+
+(global-highlight-parentheses-mode t) ; turn it on for all modes by default
+;;(global-highlight-changes-mode -1)
+
+
+
+(setq TeX-save-query nil)
+(setq TeX-PDF-mode 1)
+
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+           #'TeX-revert-document-buffer)
+
+
+(add-to-list 'auto-mode-alist '("\\.cu\\'" . c-mode))
+
+(require 'ivy-rich)
+(ivy-rich-mode 1)
+
+(setq ivy-rich--display-transformers-list
+      '(ivy-switch-buffer
+        (:columns
+         ((ivy-rich-switch-buffer-icon :width 2)
+          (ivy-rich-candidate (:width 30))
+          (ivy-rich-switch-buffer-size (:width 7))
+          (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+          (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+          (ivy-rich-switch-buffer-project (:width 15 :face success))
+          (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+         :predicate
+         (lambda (cand) (get-buffer cand)))))
+
+(sml-modeline-mode t)
+
+
+(require 'evil-search-highlight-persist)
+(global-evil-search-highlight-persist t)
+(setq evil-search-highlight-string-min-len 3)
+(set-face-background 'evil-ex-lazy-highlight "gold")
+(set-face-foreground 'evil-ex-lazy-highlight "black")
+
+
+
+
+
+;;* AucTex: Require AucTex
+(require 'tex-site) 
+
+;;* LaTeX: Enable LaTeX Math mode by default
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+
+
+
+(defun my-latex (action)
+  (interactive)
+  (if (buffer-modified-p) (save-buffer))
+  (let ((f1 (current-frame-configuration))
+        (retcode (shell-command (concat "~/bin/my-latex " action " " buffer-file-name))))
+    (if (= retcode 0) (set-frame-configuration f1))))
+
+(add-hook 'latex-mode-hook (lambda ()
+      (define-key LaTeX-mode-map (kbd "<f12>") '(lambda () (interactive) (my-latex "preview")))
+      (define-key LaTeX-mode-map (kbd "<S-f12>") '(lambda () (interactive) (my-latex "create")))))
+
+(setq ido-file-extensions-order '(".f" ".f90" ".ipynb" ".py"))
+
+
+(setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
+
+
+(global-anzu-mode +1)
+(require 'helm-bind-key)
+
+
+
+
+;;(set-face-attribute 'default nil :height 130)
+
+;; For previous buffer
+(global-set-key (kbd "C-x j") 'previous-multiframe-window)
+
+
+
+(ivy-explorer-mode 1)
+
+(require 'flyspell-correct-ivy)
+(define-key flyspell-mode-map (kbd "C-;") 'flyspell-correct-wrapper)
+
+
+(require 'ivy-bibtex)
+
+
+;;(require 'autopair)
+;;(autopair-global-mode) ;; to enable in all buffers
+
+(require 'lusty-explorer)
+
+
+(pdf-tools-install)
+
+
+
+
+
+
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server 1)
+;; shortcut for sync forward search auctex
+(global-set-key (kbd "C-g") 'pdf-sync-forward-search)
+
+(global-set-key (kbd "<f12>") 'preview-buffer)
+(global-set-key (kbd "<f11>") 'preview-clearout-buffer)
+(global-set-key (kbd "<f10>") 'preview-environment)
+
+
+
+
+
+;; Fast compilation in Latex AUCTEX
+(global-set-key (kbd "<f5>") 'TeX-command-run-all)
+(global-set-key (kbd "<f6>") 'save-buffer)
+
+
+(require 'tex-site)
+(autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
+(autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
+(autoload 'reftex-citation "reftex-cite" "Make citation" nil)
+(autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
+(add-hook 'latex-mode-hook 'turn-on-reftex) ; with Emacs latex mode
+;; (add-hook 'reftex-load-hook 'imenu-add-menubar-index)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+(setq LaTeX-eqnarray-label "eq"
+LaTeX-equation-label "eq"
+LaTeX-figure-label "fig"
+LaTeX-table-label "tab"
+LaTeX-myChapter-label "chap"
+TeX-auto-save t
+TeX-newline-function 'reindent-then-newline-and-indent
+TeX-parse-self t
+TeX-style-path
+'("style/" "auto/"
+"/usr/share/emacs21/site-lisp/auctex/style/"
+"/var/lib/auctex/emacs21/"
+"/usr/local/share/emacs/site-lisp/auctex/style/")
+LaTeX-section-hook
+'(LaTeX-section-heading
+LaTeX-section-title
+LaTeX-section-toc
+LaTeX-section-section
+LaTeX-section-label))
+
+
+;;(require 'preview)
+
+(defadvice preview-inactive-string (around preview-show-old nil activate)
+  "Show old preview when editing source code."
+  (declare (special preview-icon)) ;; preview-icon is a local variable defined by preview-mode
+  (when (overlay-get ov 'preview-state)
+    (let ((preview-icon (or (car-safe (overlay-get ov 'preview-image)) preview-icon)))
+      (overlay-put ov 'preview-old-image preview-icon)
+      ad-do-it
+      )))
+
+(defadvice preview-disabled-string (around preview-show-old nil activate)
+  "Show old preview when editing source code."
+  (declare (special preview-icon))
+  (when (overlay-get ov 'preview-state)
+    (let ((preview-icon (or (overlay-get ov 'preview-old-image) preview-icon)))
+      ad-do-it
+      )))
+
+
+
+
+(use-package pdf-tools
+    :ensure t
+    :config
+    (pdf-tools-install)
+    (setq-default pdf-view-display-size 'fit-page)
+    (bind-keys :map pdf-view-mode-map
+        ("\\" . hydra-pdftools/body)
+        ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+        ("g"  . pdf-view-first-page)
+        ("G"  . pdf-view-last-page)
+        ("l"  . image-forward-hscroll)
+        ("h"  . image-backward-hscroll)
+        ("j"  . pdf-view-next-page)
+        ("k"  . pdf-view-previous-page)
+        ("e"  . pdf-view-goto-page)
+        ("u"  . pdf-view-revert-buffer)
+        ("al" . pdf-annot-list-annotations)
+        ("ad" . pdf-annot-delete)
+        ("aa" . pdf-annot-attachment-dired)
+        ("am" . pdf-annot-add-markup-annotation)
+        ("at" . pdf-annot-add-text-annotation)
+        ("y"  . pdf-view-kill-ring-save)
+        ("i"  . pdf-misc-display-metadata)
+        ("s"  . pdf-occur)
+        ("b"  . pdf-view-set-slice-from-bounding-box)
+        ("r"  . pdf-view-reset-slice))
+     (use-package org-pdfview
+       :ensure t))
+
+
+
+
+(indent-guide-global-mode)
+
+(init-open-recentf)
+(recentf-load-list)
+(recentf-open-files)
+
+;; Python Debugger
+(defun sdev/init-realgud
+  (interactive)
+  (load-library "realgud"))  
+(sdev/init-realgud 1)
+
+
+;; Helps in TeX-folding and navigation
+(add-hook 'LaTeX-mode-hook #'latex-extra-mode)
+
+
+;; for ipython shell
+(require 'python)
+(setq python-shell-interpreter "ipython")
+(setq python-shell-interpreter-args "--pylab")
+
+
+
+;; Auto completion
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-dabbrev-downcase 0)
+(setq company-idle-delay 0)
+
+(add-hook 'LaTeX-mode-hook 'outline-minor-mode)
+
+(add-hook 'find-file-hook 'my-project-hook)
+(defun my-project-hook ()
+  (when (string= (file-name-extension buffer-file-name) "tex")
+    (TeX-source-correlate-mode)))
+
+
+(setq company-minimum-prefix-length 4)
+
+(require 'calfw)
+(require 'calfw-cal)
+(require 'calfw-org)
+
+(add-to-list 'load-path "/path/to/repo")
+(require 'call-graph)
+(call-graph) ;; to launch it
+
+
+;; All the below is from
+;; http://doc.norang.ca/org-mode.html
+
+(add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append)
+
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold)
+              ("MEETING" :foreground "forest green" :weight bold)
+              ("PHONE" :foreground "forest green" :weight bold))))
+
+
+
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+
+;; === Org Agenda ===
+(load-file "~/Desktop/gs-org.el")
